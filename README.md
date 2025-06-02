@@ -3,12 +3,12 @@
 Este projeto apresenta um pipeline ETL completo — desde a geração de dados até a exibição de KPIs em tempo real — com foco em práticas modernas de engenharia de dados. Ele simula um fluxo de vendas utilizando armazenamento em nuvem, monitoramento via Kafka e visualização interativa. Neste documento, você encontrará detalhes sobre a arquitetura do sistema, os principais componentes envolvidos e instruções para executar o projeto localmente ou com Docker.
 ## Índice
 
-- [Visão Geral do Projeto]
-- [Tecnologias e Bibliotecas Utilizadas]
-- [Arquitetura]
-- [Instruções de Configuração]
-- [Fluxo de Dados]
-- [Indicadores-Chave de Performance (KPIs)]
+- Visão Geral do Projeto
+- Tecnologias e Bibliotecas Utilizadas
+- Arquitetura
+- Instruções de Configuração
+- Fluxo de Dados
+- Indicadores-Chave de Performance (KPIs)
 
 ---
 
