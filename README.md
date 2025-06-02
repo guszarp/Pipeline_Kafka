@@ -1,160 +1,120 @@
-ETL de Vendas e Dashboard de KPIs em Tempo Real
-Este projeto apresenta um pipeline ETL completo — desde a geração de dados até a exibição de KPIs em tempo real — com foco em práticas modernas de engenharia de dados. Ele simula um fluxo de vendas utilizando armazenamento em nuvem, monitoramento via Kafka e visualização interativa. Neste documento, você encontrará detalhes sobre a arquitetura do sistema, os principais componentes envolvidos e instruções para executar o projeto localmente ou com Docker.
+Sales ETL and Real-Time KPI Dashboard
+This project demonstrates an end-to-end ETL pipeline, from data generation to a real-time KPI dashboard, showcasing data engineering and processing skills. The project leverages a combination of cloud storage, ETL practices, and real-time data visualization to simulate a sales pipeline. This README details the project’s architecture, main components, and instructions for running the project locally or in Docker containers.
 
-📚 Sumário
-Visão Geral
+Table of Contents
+Project Overview
+Technologies and Libraries Used
+Architecture
+Setup Instructions
+Data Flow
+Key Performance Indicators (KPIs)
+Project Overview
+The project simulates a daily sales sheet generation system where a CSV file is created to represent daily sales data. This data is uploaded to an AWS S3 bucket, which acts as the staging area. A scheduled process monitors this bucket for new files. Once detected, an ETL pipeline is initiated to:
 
-Tecnologias e Bibliotecas
+Extract: Retrieve the file from the S3 bucket.
+Transform: Clean and validate data using pandas and pydantic for data integrity.
+Load: Insert the data into a PostgreSQL database.
+The data is then visualized in a Streamlit-powered web application that accesses the PostgreSQL database and displays key sales KPIs in real time.
 
-Arquitetura
+![architecture](![image](app
 
-Configuração do Ambiente
+Technologies and Libraries Used
+Infrastructure
+AWS S3: Storage of sales data files, acting as the data source for ETL.
+PostgreSQL: Storage for transformed data, enabling real-time data retrieval.
+Docker: Containerization of services for easy deployment and management.
+Kafka: Message queuing system for monitoring and triggering ETL processes.
+Development and Analysis Tools
+DBeaver: Database management and querying.
+Main Python Libraries
+pandas: Data manipulation and transformation.
+boto3: AWS SDK for Python, used to interact with S3.
+Faker: Simulation of sales data.
+pydantic: Data validation, ensuring data quality in each pipeline step.
+sqlalchemy: ORM for data insertion into PostgreSQL.
+streamlit: Real-time KPI dashboard.
+confluent_kafka: Interface for Kafka, handling event-driven ETL execution.
+Architecture
+This project follows a modular ETL pipeline and visualization architecture. Each component is responsible for a specific function:
 
-Fluxo de Dados
+![architecture](image
 
-KPIs Monitorados
-
-Visão Geral
-A proposta do projeto é simular a rotina de geração de relatórios de vendas diários. Um arquivo CSV com dados simulados é criado e enviado a um bucket S3 da AWS, que atua como ponto de entrada para o pipeline. Um processo automático monitora esse bucket e, ao detectar novos arquivos, inicia o pipeline ETL que:
-
-Extrai os dados do bucket S3;
-
-Transforma os dados com limpeza e validação usando pandas e pydantic;
-
-Carrega os dados em um banco de dados PostgreSQL.
-
-Esses dados são então consumidos por uma aplicação Streamlit, que exibe indicadores de desempenho de vendas em tempo real.
-
-Tecnologias e Bibliotecas
-Infraestrutura
-AWS S3 – Armazena os arquivos CSV de vendas, servindo como fonte do ETL
-
-PostgreSQL – Banco de dados relacional onde os dados transformados são armazenados
-
-Docker – Facilita a criação e execução de ambientes isolados
-
-Kafka – Responsável por acionar e monitorar o pipeline ETL por meio de mensagens
-
-Ferramentas de Apoio
-DBeaver – Interface de gerenciamento e consulta ao banco de dados
-
-Principais Bibliotecas Python
-pandas – Manipulação e transformação de dados
-
-boto3 – SDK para comunicação com serviços AWS (como S3)
-
-Faker – Geração de dados de vendas fictícios
-
-pydantic – Validação e integridade dos dados em cada etapa do pipeline
-
-sqlalchemy – ORM para integração com o PostgreSQL
-
-streamlit – Framework para criação de dashboards interativos em tempo real
-
-confluent_kafka – Biblioteca de integração com Kafka
-
-Arquitetura
-A arquitetura é modular e bem definida, permitindo controle total do fluxo de dados:
-
-Geração de Dados: O script csv_generator.py cria arquivos com dados de vendas simulados.
-
-Armazenamento e Detecção: Os arquivos são enviados para o S3 e monitorados por Kafka.
-
-Pipeline ETL:
-
-Extração: Download do CSV via boto3.
-
-Transformação: Limpeza e validação com pandas e pydantic.
-
-Carga: Inserção no PostgreSQL usando sqlalchemy.
-
-Dashboard: Aplicação em Streamlit que consome os dados do PostgreSQL e apresenta KPIs atualizados em tempo real.
-
-Configuração do Ambiente
-Requisitos
+Data Generation: csv_generator.py creates a sales data CSV with simulated daily sales.
+S3 Storage and Monitoring: Files are stored in an S3 bucket and monitored by a Kafka topic that triggers the ETL process upon file arrival.
+ETL Pipeline:
+Extraction: Pulls CSV from S3.
+Transformation: Validates and cleans data using pydantic.
+Loading: Inserts data into PostgreSQL.
+Visualization: A Streamlit application that pulls from PostgreSQL to provide real-time KPIs.
+Setup Instructions
+Prerequisites
 Docker
-
-AWS CLI configurado
-
+AWS CLI configured with S3 access
 PostgreSQL
-
 Kafka
+Running the Project
+Clone the repository:
 
-Passos para Execução
-Clone o repositório:
-
-bash
-Copiar
-Editar
 git clone git@github.com/caio-moliveira/sales-pipeline-project.git
 cd sales-pipeline-project
-Crie o arquivo .env com as configurações necessárias para PostgreSQL, AWS e Kafka.
+Create and configure .env file for PostgreSQL, AWS, and Kafka settings.
 
-Inicie os serviços com Docker:
+Run Docker Services
 
-bash
-Copiar
-Editar
 docker-compose up --build
-Variáveis de Ambiente
-As seguintes variáveis devem ser definidas no arquivo .env na raiz do projeto:
+Environment Variables
+This project requires specific environment variables to be set for proper functioning. Below is a description of each variable and its purpose. Make sure to include them in a .env file at the root of the project.
 
-AWS
-env
-Copiar
-Editar
-AWS_ACCESS_KEY_ID=sua_chave_de_acesso
-AWS_SECRET_ACCESS_KEY=sua_chave_secreta
-AWS_REGION=sua_regiao (ex: us-east-1)
-BUCKET_NAME=nome_do_bucket
-PostgreSQL
-env
-Copiar
-Editar
-POSTGRES_USER=usuario
-POSTGRES_PASSWORD=senha
-POSTGRES_HOST=host
-POSTGRES_DB=nome_do_banco
-Kafka
-env
-Copiar
-Editar
-BOOTSTRAP_SERVERS=host_do_kafka
-SASL_USERNAME=usuario_kafka
-SASL_PASSWORD=senha_kafka
-CLIENT_ID=id_cliente_kafka
-⚠️ Importante: adicione o .env no .gitignore para evitar o versionamento de dados sensíveis.
+AWS Configuration
+AWS_ACCESS_KEY_ID: Your AWS access key for authentication.
+AWS_SECRET_ACCESS_KEY: Your AWS secret access key.
+AWS_REGION: The AWS region where your services are hosted (e.g., us-east-1).
+BUCKET_NAME: The name of your AWS S3 bucket.
+PostgreSQL Database Configuration
+POSTGRES_USER: The username for your PostgreSQL database.
+POSTGRES_PASSWORD: The password for your PostgreSQL database.
+POSTGRES_HOST: The host address of your PostgreSQL database.
+POSTGRES_DB: The name of your PostgreSQL database.
+Kafka Configuration
+BOOTSTRAP_SERVERS: The Kafka broker(s) to connect to (e.g., broker1:9092,broker2:9092).
+SASL_USERNAME: Your Kafka username.
+SASL_PASSWORD: Your Kafka password.
+CLIENT_ID: The unique identifier for the Kafka client.
+Setting Up
+Create a .env file in the root of the project.
+Copy the example below and replace placeholder values with your actual credentials.
+Ensure the .env file is excluded from version control using .gitignore to keep sensitive information private.
+Example .env File
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+AWS_REGION=your_aws_region
+BUCKET_NAME=your_bucket_name
 
-Fluxo de Dados
-Geração de Dados
+POSTGRES_USER=your_postgres_username
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_HOST=your_postgres_host
+POSTGRES_DB=your_postgres_database
 
-Com Faker, um arquivo CSV com vendas fictícias é gerado e armazenado no S3.
+BOOTSTRAP_SERVERS=your_kafka_bootstrap_servers
+SASL_USERNAME=your_kafka_username
+SASL_PASSWORD=your_kafka_password
+CLIENT_ID=your_kafka_client_id
+Data Flow
+Data Generation:
+Uses Faker to simulate realistic sales data, stored as a CSV in S3.
+Extraction:
+boto3 fetches the latest sales CSV from S3.
+Transformation:
+pandas and pydantic perform basic data cleaning and validation.
+Loading:
+sqlalchemy ORM maps data to PostgreSQL.
+Visualization:
+Streamlit dashboard connects to PostgreSQL, presenting KPIs in real time.
+Key Performance Indicators (KPIs)
+The dashboard displays the following KPIs:
 
-Extração
-
-O script detecta o novo arquivo e o baixa utilizando boto3.
-
-Transformação
-
-pandas organiza os dados e pydantic garante a integridade dos registros.
-
-Carga
-
-Os dados validados são inseridos no PostgreSQL via sqlalchemy.
-
-Visualização
-
-A aplicação em Streamlit se conecta ao banco e exibe os KPIs em tempo real.
-
-KPIs Monitorados
-O dashboard mostra os seguintes indicadores de desempenho:
-
-Vendas Totais – Soma do total de vendas no dia
-
-Valor Médio por Transação – Valor médio por venda
-
-Produtos Mais Vendidos – Lista dos produtos com maior volume de vendas
-
-Vendas por Categoria – Distribuição das vendas por categoria de produto
-
-Tendência de Vendas – Gráfico em tempo real da evolução das vendas
+Total Sales: Sum of daily sales.
+Average Transaction Value: Average value of transactions.
+Top-selling Products: Highest volume products for the day.
+Sales by Category: Breakdown of sales by product category.
+Sales Trend: A real-time chart tracking sales over time.
